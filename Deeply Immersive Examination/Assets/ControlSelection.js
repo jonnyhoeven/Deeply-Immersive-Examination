@@ -1,50 +1,44 @@
-﻿var selectiontime = 0.0;
-var linkToScriptB : MoveNext;
-var soundplayed: boolean;
-var timelastact = 0.0;
-var iamselected: boolean;
-var myrenderer : Renderer;
-var colorStart : Color = Color.white;
-var colorEnd : Color = Color.green;
-var duration : float = 1.0;
-var rend: Renderer;
+﻿
+private var CurrentDuration = 0.0; // Duration of looking directly at the object
+var IsSelected: boolean;  // Current visual state
+var SelectionSpeed: float = 5.0; // speed in seconds before selection inverts
+private var rend: Renderer; // our render object for interaction
+var MaterialSelected: Material;
+var MaterialDeselected: Material;
 
 
 function Start() {
+    // gets our renderobject to draw our interface selection color changes
     rend = GetComponent.<Renderer>();
 }
 
 
 function Update(){
-    var lerp: float = Mathf.PingPong(Time.time, duration) / duration;
-
-    if (iamselected) {
-        rend.material.color = Color.blue; //Color.Lerp(colorStart, colorEnd, lerp);
-    }
-    else{
-        rend.material.color = Color.white;
-        }
-    }
-
-
-function Highlite () {
+    // We Always slowly decrease CurrentDuration to 0 by a factor 1, when we highlighted we increase by factor 2.
+       CurrentDuration = CurrentDuration - Time.deltaTime * 10;
+       print(CurrentDuration);
+    if (CurrentDuration < 0) { CurrentDuration = 0.0;} // don't be negative
     
-    if (iamselected) {
-        print("Select timer" + (Time.time - timelastact));
- 
-        if ((Time.time - timelastact) > selectiontime) {
-         // move to next question
-            print("done")       ;  
-            rend.material.color = Color.red;
- 
-            //            linkToScriptB.MoveOn();
-            iamselected = false;
-        }
+    if (CurrentDuration > SelectionSpeed) { // when we exceed our expected SelectionSpeed Standard we invert our selectionstate.
+        InvertSelection();
+        CurrentDuration = 0; // reset for our next inversion
+    } 
+}
 
-    }else{
-        print("Start timer");
-        timelastact = Time.time;
-        iamselected = true;
+function InvertSelection() {
+    if (IsSelected) {
+        print("DeSelection");  
+        rend.material  = MaterialDeselected;
+        IsSelected = false;
     }
-    
+    else {
+        print("Selection");  
+        rend.material = MaterialSelected;
+        IsSelected = true;
+    }
+}
+
+// this function gets called by CameraRayCollisionUpdateLoop when hitting a object containing this script.
+function Highlight () {
+    CurrentDuration = CurrentDuration + Time.deltaTime * 20; // increase CurrentDuration by factor 2 here
 }
