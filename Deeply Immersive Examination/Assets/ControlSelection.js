@@ -2,41 +2,49 @@
 var linkToScriptB : MoveNext;
 var soundplayed: boolean;
 var timelastact = 0.0;
+var iamselected: boolean;
+var myrenderer : Renderer;
+var colorStart : Color = Color.white;
+var colorEnd : Color = Color.green;
+var duration : float = 1.0;
+var rend: Renderer;
 
 
 function Start() {
-    soundplayed = false;
+    rend = GetComponent.<Renderer>();
 }
 
 
 function Update(){
-    if (selectiontime >0) {
-      //  selectiontime = selectiontime - (Time.deltaTime);
-       // print(selectiontime);
-        transform.Rotate (0,selectiontime*6,0);
+    var lerp: float = Mathf.PingPong(Time.time, duration) / duration;
 
+    if (iamselected) {
+        rend.material.color = Color.blue; //Color.Lerp(colorStart, colorEnd, lerp);
     }
- }
+    else{
+        rend.material.color = Color.white;
+        }
+    }
+
 
 function Highlite () {
-    timelastact = Time.time;
-    selectiontime += Time.deltaTime * 1;
-    if (selectiontime > 12) {
-        print("Keuze gemaakt");
-
-        if (!soundplayed) {
-        
-            soundplayed = true;
-            var audio: AudioSource = GetComponent.<AudioSource>();
-            audio.Play();
-            audio.Play(44100);
-
+    
+    if (iamselected) {
+        print("Select timer" + (Time.time - timelastact));
+ 
+        if ((Time.time - timelastact) > selectiontime) {
+         // move to next question
+            print("done")       ;  
+            rend.material.color = Color.red;
+ 
+            //            linkToScriptB.MoveOn();
+            iamselected = false;
         }
 
-        transform.Rotate(0,0,0);
-        linkToScriptB = GetComponent(MoveNext);
-        linkToScriptB.MoveOn();
-    } else {
-        transform.Rotate (0,selectiontime* 4,0);
+    }else{
+        print("Start timer");
+        timelastact = Time.time;
+        iamselected = true;
     }
+    
 }
