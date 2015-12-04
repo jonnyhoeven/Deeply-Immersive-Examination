@@ -78,6 +78,7 @@
     <None Include="Assets\Dive\CHANGELOG.TXT" />
     <None Include="Assets\Dive\LICENCE.TXT" />
     <None Include="Assets\Dive\README.TXT" />
+    <None Include="Assets\resources\QuestionData.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>

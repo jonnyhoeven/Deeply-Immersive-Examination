@@ -15,9 +15,12 @@ function Start() {
 
 function Update(){
     // We Always slowly decrease CurrentDuration to 0 by a factor 1, when we highlighted we increase by factor 2.
-       CurrentDuration = CurrentDuration - Time.deltaTime * 10;
-       print(CurrentDuration);
-    if (CurrentDuration < 0) { CurrentDuration = 0.0;} // don't be negative
+       if (CurrentDuration < 0) {
+           CurrentDuration = 0.0;    // don't be negative
+       }
+       else {
+           CurrentDuration = CurrentDuration - Time.deltaTime * 10;
+       }
     
     if (CurrentDuration > SelectionSpeed) { // when we exceed our expected SelectionSpeed Standard we invert our selectionstate.
         InvertSelection();
